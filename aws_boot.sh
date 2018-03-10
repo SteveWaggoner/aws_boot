@@ -53,6 +53,16 @@ write_files:
         #
         cd ~
         git clone https://github.com/SteveWaggoner/RubyTest.git
+
+        #
+        # LET'S GET THE RUBY QUANT LANG APP RUNNING
+        #
+        cd ~
+        git clone https://github.com/SteveWaggoner/QuantLang.git
+
+        #
+        # ...AND ALL THE RUBY RAILS DEPENDENCIES
+        #
         sudo apt-get install ruby-full libgmp-dev gcc zlib1g-dev build-essential bison openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev autoconf libc6-dev ncurses-dev automake libtool libcurl4-openssl-dev apache2-dev libsqlite3-dev --yes
         sudo gem install rails
         sudo gem install passenger
@@ -75,7 +85,11 @@ write_files:
 
         sudo passenger-install-apache2-module
         sudo a2enconf rails-passenger
-        sudo a2ensite RubyTest.conf
+
+        #
+        # ..AND CONFIGURE RAILS AND RESTART
+        #
+        sudo a2ensite AllRubyAppsUnderTest.conf
         sudo service apache2 reload
  
 
@@ -122,29 +136,32 @@ write_files:
           <li><a href="/KotlinPhysics">Kotlin Physics</a></li>
           <li><a href="/AngularTabby">Angular Tabby</a></li>
           <li><a href="/RubyTest">Ruby Test</a></li>
+          <li><a href="/QuantLang">Quant Lang</a></li>
         </ul>
         </html>
 
  -  path: /etc/apache2/conf-available/rails-passenger.conf
     permissions:  '0755'
     content: |
-        LoadModule passenger_module /var/lib/gems/2.3.0/gems/passenger-5.1.10/buildout/apache2/mod_passenger.so
+        LoadModule passenger_module /var/lib/gems/2.3.0/gems/passenger-5.2.1/buildout/apache2/mod_passenger.so
         <IfModule mod_passenger.c>
-          PassengerRoot /var/lib/gems/2.3.0/gems/passenger-5.1.10
+          PassengerRoot /var/lib/gems/2.3.0/gems/passenger-5.2.1
           PassengerDefaultRuby /usr/bin/ruby2.3
         </IfModule>
 
- -  path: /etc/apache2/sites-available/RubyTest.conf
+ -  path: /etc/apache2/sites-available/AllRubyAppsUnderTest.conf
     permissions:  '0755'
     content: |
         <VirtualHost *:80>
           ServerName test.publicscript.com
           DocumentRoot /var/www/html
-          Alias /RubyTest /home/ubuntu/RubyTest/public
+
           <Directory />
             Options FollowSymLinks
             AllowOverride None
           </Directory>
+
+          Alias /RubyTest /home/ubuntu/RubyTest/public
           <Directory /home/ubuntu/RubyTest>
             Options Indexes FollowSymLinks MultiViews
             AllowOverride All
@@ -157,6 +174,26 @@ write_files:
             SetHandler none
             PassengerAppRoot /home/ubuntu/RubyTest
             RailsBaseURI /RubyTest
+            Options Indexes FollowSymLinks MultiViews
+            AllowOverride None
+            #Order allow,deny
+            #allow from all
+            Require all granted
+          </Directory>
+
+          Alias /QuantLang /home/ubuntu/QuantLang/public
+          <Directory /home/ubuntu/QuantLang>
+            Options Indexes FollowSymLinks MultiViews
+            AllowOverride All
+            Order allow,deny
+            allow from all
+          </Directory>
+          <Directory /home/ubuntu/QuantLang/public>
+            PassengerEnabled on
+            PassengerAppEnv development
+            SetHandler none
+            PassengerAppRoot /home/ubuntu/QuantLang
+            RailsBaseURI /QuantLang
             Options Indexes FollowSymLinks MultiViews
             AllowOverride None
             #Order allow,deny

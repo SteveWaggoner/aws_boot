@@ -77,6 +77,11 @@ write_files:
         sudo gem install capybara
         sudo gem install selenium-webdriver
         sudo gem install web-console
+
+        #QuantLang
+        sudo gem install treetop
+        sudo gem install chronic
+        sudo gem install rbtree
         
         #increase virtual memory
         sudo dd if=/dev/zero of=/swap bs=1M count=1024

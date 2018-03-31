@@ -65,7 +65,7 @@ write_files:
         #
         sudo apt-get install ruby-full libgmp-dev gcc zlib1g-dev build-essential bison openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev autoconf libc6-dev ncurses-dev automake libtool libcurl4-openssl-dev apache2-dev libsqlite3-dev --yes
         sudo gem install rails
-        sudo gem install passenger
+        sudo gem install passenger -v 5.2.2
         sudo gem install sqlite3
         sudo gem install puma
         sudo gem install sass-rails
@@ -148,9 +148,9 @@ write_files:
  -  path: /etc/apache2/conf-available/rails-passenger.conf
     permissions:  '0755'
     content: |
-        LoadModule passenger_module /var/lib/gems/2.3.0/gems/passenger-5.2.1/buildout/apache2/mod_passenger.so
+        LoadModule passenger_module /var/lib/gems/2.3.0/gems/passenger-5.2.2/buildout/apache2/mod_passenger.so
         <IfModule mod_passenger.c>
-          PassengerRoot /var/lib/gems/2.3.0/gems/passenger-5.2.1
+          PassengerRoot /var/lib/gems/2.3.0/gems/passenger-5.2.2
           PassengerDefaultRuby /usr/bin/ruby2.3
         </IfModule>
 

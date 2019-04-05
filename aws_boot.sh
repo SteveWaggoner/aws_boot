@@ -115,7 +115,7 @@ write_files:
         
         #Get Latest Node.js
         sudo apt-get install python-software-properties --yes
-        curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+        curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
         sudo apt-get install nodejs --yes
         sudo npm install -g @angular/cli
 

@@ -82,7 +82,7 @@ write_files:
         sudo gem install treetop
         sudo gem install chronic
         sudo gem install rbtree
-        
+
         #increase virtual memory
         sudo dd if=/dev/zero of=/swap bs=1M count=1024
         sudo mkswap /swap
@@ -96,7 +96,7 @@ write_files:
         #
         sudo a2ensite AllRubyAppsUnderTest.conf
         sudo service apache2 reload
- 
+
 
         #
         # LET GET THE KOTLIN DEMO RUNNING
@@ -119,7 +119,6 @@ write_files:
         sudo apt-get install nodejs --yes
         sudo npm install -g @angular/cli
 
-
         #
         cd ~
         git clone https://github.com/SteveWaggoner/AngularTabby.git
@@ -127,6 +126,23 @@ write_files:
         npm install
         ng build --base-href AngularTabby
         sudo ln -s ~/AngularTabby/dist /var/www/html/AngularTabby
+
+        #
+        # LETS GET THE SCALA JS DEMO RUNNING 
+        #
+        
+        #Get SBT install
+        echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+        curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
+        sudo apt-get update
+        sudo apt-get install sbt
+
+        #
+        cd ~
+        git clone https://github.com/SteveWaggoner/KlondikeJs.git
+        cd KlondikeJs
+        sbt run
+        sudo ln -s ~/KlondikeJs/target/scala-2.12 /var/www/html/KlondikeJs
 
  -  path: /var/www/html/index.html
     permissions:  '0755'
@@ -142,6 +158,7 @@ write_files:
           <li><a href="/AngularTabby">Angular Tabby</a></li>
           <li><a href="/RubyTest">Ruby Test</a></li>
           <li><a href="/QuantLang">Quant Lang</a></li>
+          <li><a href="/KlondikeJs/classes">Klondike Js</a></li>
         </ul>
         </html>
 
@@ -225,23 +242,24 @@ INSTANCE_TYPE=t2.micro
 
 
 function launch_ec2() {
-local AMI_IMAGE_ID=$1
 
-aws ec2 run-instances --image-id $AMI_IMAGE_ID --count 1 --instance-type $INSTANCE_TYPE \
-  --key-name stwaggoner-personal-aws --subnet-id subnet-88c39dfe --security-group-ids sg-0809fc78 \
-  --user-data file://data/my_script.txt  > data/last-instance.txt-new || exit 1
-mv data/last-instance.txt-new data/last-instance.txt
+  local AMI_IMAGE_ID=$1
 
-INSTANCE_ID=`grep InstanceId data/last-instance.txt | cut -d\" -f4`
+  aws ec2 run-instances --image-id $AMI_IMAGE_ID --count 1 --instance-type $INSTANCE_TYPE \
+    --key-name stwaggoner-personal-aws --subnet-id subnet-88c39dfe --security-group-ids sg-0809fc78 \
+    --user-data file://data/my_script.txt  > data/last-instance.txt-new || exit 1
+  mv data/last-instance.txt-new data/last-instance.txt
 
-aws ec2 create-tags --resources $INSTANCE_ID --tags "Key=Name,Value=My test.publicscript-dev (`date +%H%M`)"
-aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+  INSTANCE_ID=`grep InstanceId data/last-instance.txt | cut -d\" -f4`
 
-# test.publicscript.com
-# wikijs.com
+  aws ec2 create-tags --resources $INSTANCE_ID --tags "Key=Name,Value=My test.publicscript-dev (`date +%H%M`)"
+  aws ec2 wait instance-running --instance-ids $INSTANCE_ID
 
-ELASTIC_PUBLIC_IP=34.206.230.49
-aws ec2 associate-address --instance-id $INSTANCE_ID --public-ip $ELASTIC_PUBLIC_IP
+  # test.publicscript.com
+  # wikijs.com
+
+  ELASTIC_PUBLIC_IP=34.206.230.49
+  aws ec2 associate-address --instance-id $INSTANCE_ID --public-ip $ELASTIC_PUBLIC_IP
 
 }
 

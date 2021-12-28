@@ -121,6 +121,7 @@ function launch_ec2() {
 
   aws ec2 run-instances --image-id $AMI_IMAGE_ID --count 1 --instance-type $INSTANCE_TYPE \
     --key-name stwaggoner-personal-aws --subnet-id subnet-88c39dfe --security-group-ids sg-0809fc78 \
+    --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 120 } } ]"  \
     --user-data file://data/my_script.txt  > data/last-instance.txt-new || exit 1
   mv data/last-instance.txt-new data/last-instance.txt
 

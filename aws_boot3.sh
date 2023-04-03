@@ -84,27 +84,31 @@ write_files:
 
 
         #
-        # Install Gunicorn
+        # Install Gunicorn / Flask / Project
         #
         sudo apt update
         sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools -y
         sudo apt install python3-venv -y
+
         mkdir /home/$MY_USER/$MY_PROJECT
         cd /home/$MY_USER/$MY_PROJECT
         python3.6 -m venv ${MY_PROJECT}_env
         source ${MY_PROJECT}_env/bin/activate
         pip install wheel 
         pip install gunicorn flask 
+        pip install flask-sock
         deactivate
         
         cat <<EOF > /home/$MY_USER/$MY_PROJECT/${MY_PROJECT}.py
 
         from flask import Flask
+
         app = Flask(__name__)
 
         @app.route("/")
         def hello():
            return "<h1 style='color:blue'>Hello There from $MY_PROJECT!</h1>"
+
 
         if __name__ == "__main__":
            app.run(host='0.0.0.0')
@@ -121,8 +125,7 @@ write_files:
         EOF
 
 
-
-        sudo tee  /etc/systemd/system/$MY_PROJECT.service> /dev/null <<EOF
+        sudo tee /etc/systemd/system/$MY_PROJECT.service > /dev/null <<EOF
 
         [Unit]
         Description=Gunicorn instance to serve $MY_PROJECT
@@ -139,7 +142,6 @@ write_files:
         WantedBy=multi-user.target
 
         EOF
-
 
         sudo systemctl start  $MY_PROJECT
         sudo systemctl enable $MY_PROJECT
@@ -166,6 +168,26 @@ write_files:
         sudo ln -s /etc/nginx/sites-available/$MY_PROJECT /etc/nginx/sites-enabled/
         sudo systemctl restart nginx
         sudo ufw allow 'Nginx Full'
+
+
+        #
+        # Integrate Quack network example with Flask
+        #
+        cd /home/$MY_USER/$MY_PROJECT
+        git clone https://github.com/SteveWaggoner/Quack.git
+
+        # append registering blueprint to app
+        cat <<EOF >> /home/$MY_USER/$MY_PROJECT/${MY_PROJECT}.py
+
+        # Quack echo example 
+        from Quack.network import echo
+        echo.register_page(app)
+
+        EOF
+
+        sudo systemctl stop  $MY_PROJECT
+        sudo systemctl start $MY_PROJECT
+
 
 runcmd:
  - sudo -u ubuntu -H sh -c "/tmp/ubuntu_init.sh"

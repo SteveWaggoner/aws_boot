@@ -236,7 +236,7 @@ write_files:
 
         EOF
         
-	sudo chown root:root /tmp/nginx-git
+        sudo chown root:root /tmp/nginx-git
         sudo mv /tmp/nginx-git /etc/nginx/sites-available/git
 
         cd /etc/nginx/sites-enabled && sudo ln -s /etc/nginx/sites-available/git

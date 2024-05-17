@@ -56,6 +56,14 @@ write_files:
         sudo tljh-config reload proxy
 
 
+        #
+        # Install sshkernel (https://github.com/NII-cloud-operation/sshkernel/tree/master)
+        #
+        sudo pip install -U sshkernel
+        sudo python -m sshkernel install
+        jupyter kernelspec list
+
+
 runcmd:
  - sudo -u ubuntu -H sh -c "/tmp/ubuntu_init.sh"
 

@@ -50,10 +50,10 @@ write_files:
         #
         # Install Ruby into Jupyter
         #
-        sudo apt install libtool libffi-dev ruby ruby-dev make
-        sudo -H -u jupyter-jupyter gem install --user-install iruby
-        sudo -H -u jupyter-jupyter /home/jupyter-jupyter/.gem/ruby/2.7.0/bin/iruby register --force
-        sudo tljh-config reload proxy
+        sudo apt install libtool libffi-dev ruby ruby-dev make -y
+        sudo gem install iruby
+        sudo adduser jupyter-jupyter
+        sudo -H -u jupyter-jupyter iruby register --force
 
 
         #

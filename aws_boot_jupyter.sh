@@ -58,7 +58,7 @@ write_files:
 
         #
         # Install sshkernel (https://github.com/NII-cloud-operation/sshkernel/tree/master)
-	#   (note: this breaks pip see https://github.com/NII-cloud-operation/sshkernel/issues/30)
+        #   (note: this breaks pip see https://github.com/NII-cloud-operation/sshkernel/issues/30)
         #sudo pip3 install -U sshkernel
         #sudo python3 -m sshkernel install
         #jupyter kernelspec list
@@ -67,7 +67,8 @@ write_files:
         #
         # Install bash_kernel (https://github.com/takluyver/bash_kernel)
         #
-        sudo pip3 install bash_kernel
+        #sudo pip3 install bash_kernel
+        sudo pip3 install git+https://github.com/takluyver/bash_kernel.git
         sudo python3 -m bash_kernel.install
         jupyter kernelspec list
 

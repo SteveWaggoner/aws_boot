@@ -68,8 +68,15 @@ write_files:
         # Install bash_kernel (https://github.com/takluyver/bash_kernel)
         #
         #sudo pip3 install bash_kernel
-        sudo pip3 install git+https://github.com/takluyver/bash_kernel.git
-        sudo python3 -m bash_kernel.install
+        #sudo pip3 install git+https://github.com/takluyver/bash_kernel.git
+        #sudo python3 -m bash_kernel.install
+        #jupyter kernelspec list
+
+        #
+        # Install gen_kernel 
+        #
+        sudo pip3 install git+https://github.com/SteveWaggoner/gen_kernel.git
+        sudo python3 -m gen_kernel.install
         jupyter kernelspec list
 
 

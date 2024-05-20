@@ -80,6 +80,22 @@ write_files:
         jupyter kernelspec list
 
 
+        #
+        # Build the db tool
+        #
+        sudo apt-get install python3-dev
+        pwd
+        cd ~
+        mkdir github
+        cd github
+        git clone https://github.com/SteveWaggoner/db.git
+        cd db/src
+        make
+
+        cd ~/github
+        git clone https://github.com/SteveWaggoner/WikitreeTools.git
+
+
 runcmd:
  - sudo -u ubuntu -H sh -c "/tmp/ubuntu_init.sh"
 
